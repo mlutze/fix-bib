@@ -26,6 +26,11 @@ jobs:
         pip install pytest
         pip install .
 
+    - name: Verify installation
+      run: |
+        python -m fix_bib --help
+        pip show fix-bib
+
     - name: Run tests
       run: |
-        pytest tests/ -v
+        pytest tests/ -v -s
