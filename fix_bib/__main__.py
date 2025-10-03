@@ -589,7 +589,9 @@ def main():
     bib_format.indent = "  "
     bib_format.value_column = "auto"
 
-    bibtexparser.write_file(out_file, library=db, append_middleware=middleware, bibtex_format=bib_format)
+    # Write with explicit UTF-8 encoding for cross-platform compatibility
+    with open(out_file, 'w', encoding='utf-8') as f:
+        bibtexparser.write_file(f, library=db, append_middleware=middleware, bibtex_format=bib_format)
 
 if __name__ == "__main__":
     main()
