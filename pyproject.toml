@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["fix_bib*"]
+
+[project]
+name = "fix-bib"
+version = "1.0.0"
+description = "A tool to fix and manage BibTeX files"
+readme = "README.md"
+requires-python = ">=3.7"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "bibtexparser",
+    "habanero",
+    "pylatexenc",
+    "unidecode",
+    "requests",
+]
+
+[project.scripts]
+fix-bib = "fix_bib:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]

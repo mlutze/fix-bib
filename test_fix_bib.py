@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 import pytest
 
-SCRIPT = "./fix-bib"
+SCRIPT = "fix-bib"
 TEST_DIR = Path("test")
 INPUT_DIR = TEST_DIR / "input"
 EXPECTED_DIR = TEST_DIR / "expected"
