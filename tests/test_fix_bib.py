@@ -1,11 +1,11 @@
 import subprocess
 import tempfile
 import shutil
+import sys
 from pathlib import Path
 import pytest
 
-SCRIPT = "fix-bib"
-TEST_DIR = Path("test")
+TEST_DIR = Path(__file__).parent / "data"
 INPUT_DIR = TEST_DIR / "input"
 EXPECTED_DIR = TEST_DIR / "expected"
 RESOURCES_DIR = TEST_DIR / "resources-unused"
@@ -13,7 +13,8 @@ RESOURCES_DIR = TEST_DIR / "resources-unused"
 
 def run_fix_bib(args, stdin_input=None):
     """Run fix-bib with given arguments."""
-    cmd = [SCRIPT] + args
+    # Use python -m fix_bib to work in CI environments
+    cmd = [sys.executable, "-m", "fix_bib"] + args
     result = subprocess.run(
         cmd,
         input=stdin_input,
