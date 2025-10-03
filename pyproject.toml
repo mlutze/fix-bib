@@ -20,11 +20,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "bibtexparser",
-    "habanero",
-    "pylatexenc",
-    "unidecode",
-    "requests",
+    "bibtexparser>=2.0.0b0",
+    "habanero>=1.2.0",
+    "pylatexenc>=2.0",
+    "unidecode>=1.3.0",
+    "requests>=2.20.0",
 ]
 
 [project.scripts]
