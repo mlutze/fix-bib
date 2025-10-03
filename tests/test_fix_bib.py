@@ -21,13 +21,25 @@ def run_fix_bib(args, stdin_input=None):
         capture_output=True,
         text=True
     )
+    if result.returncode != 0:
+        print(f"\n=== Command failed with return code {result.returncode} ===")
+        print(f"Command: {' '.join(cmd)}")
+        print(f"STDOUT:\n{result.stdout}")
+        print(f"STDERR:\n{result.stderr}")
     return result
 
 
 def compare_files(file1, file2):
     """Compare two files and return True if identical."""
     with open(file1) as f1, open(file2) as f2:
-        return f1.read() == f2.read()
+        content1 = f1.read()
+        content2 = f2.read()
+        if content1 != content2:
+            print(f"\n=== Expected ({file2}) ===")
+            print(content2[:500])
+            print(f"\n=== Actual ({file1}) ===")
+            print(content1[:500])
+        return content1 == content2
 
 
 @pytest.mark.parametrize("test_name,args,stdin_input,tex_file", [
