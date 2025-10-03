@@ -31,7 +31,7 @@ def run_fix_bib(args, stdin_input=None):
 
 def compare_files(file1, file2):
     """Compare two files and return True if identical."""
-    with open(file1) as f1, open(file2) as f2:
+    with open(file1, encoding='utf-8') as f1, open(file2, encoding='utf-8') as f2:
         content1 = f1.read()
         content2 = f2.read()
         if content1 != content2:
