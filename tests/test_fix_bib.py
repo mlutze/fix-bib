@@ -21,13 +21,25 @@ def run_fix_bib(args, stdin_input=None):
         capture_output=True,
         text=True
     )
+    if result.returncode != 0:
+        print(f"\n=== Command failed with return code {result.returncode} ===")
+        print(f"Command: {' '.join(cmd)}")
+        print(f"STDOUT:\n{result.stdout}")
+        print(f"STDERR:\n{result.stderr}")
     return result
 
 
 def compare_files(file1, file2):
     """Compare two files and return True if identical."""
-    with open(file1) as f1, open(file2) as f2:
-        return f1.read() == f2.read()
+    with open(file1, encoding='utf-8') as f1, open(file2, encoding='utf-8') as f2:
+        content1 = f1.read()
+        content2 = f2.read()
+        if content1 != content2:
+            print(f"\n=== Expected ({file2}) ===")
+            print(content2[:500])
+            print(f"\n=== Actual ({file1}) ===")
+            print(content1[:500])
+        return content1 == content2
 
 
 @pytest.mark.parametrize("test_name,args,stdin_input,tex_file", [
@@ -54,9 +66,13 @@ def compare_files(file1, file2):
 ])
 def test_fix_bib(test_name, args, stdin_input, tex_file):
     """Parameterized test for all fix-bib test cases."""
-    with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
-        tmpdir = None
+    # Create temp file, close it, and let Python auto-delete on context exit
+    with tempfile.NamedTemporaryFile(mode='w', delete=True, suffix='.bib') as tmp:
+        tmp_name = tmp.name
+        # Close the file so fix-bib can open it (required on Windows)
+        tmp.close()
 
+        tmpdir = None
         try:
             # Handle tests that need a temporary directory for .tex files
             if tex_file:
@@ -65,16 +81,15 @@ def test_fix_bib(test_name, args, stdin_input, tex_file):
                 args = args + ["-d", tmpdir]
 
             # Run fix-bib
-            run_fix_bib(args + ["-o", tmp.name, str(INPUT_DIR / f"{test_name}.bib")], stdin_input)
+            run_fix_bib(args + ["-o", tmp_name, str(INPUT_DIR / f"{test_name}.bib")], stdin_input)
 
             # Compare output .bib file
-            assert compare_files(tmp.name, EXPECTED_DIR / f"{test_name}.bib")
+            assert compare_files(tmp_name, EXPECTED_DIR / f"{test_name}.bib")
 
             # Compare .tex file if applicable
             if tex_file:
                 assert compare_files(Path(tmpdir) / tex_file, EXPECTED_DIR / tex_file)
 
         finally:
-            Path(tmp.name).unlink()
             if tmpdir:
                 shutil.rmtree(tmpdir)
